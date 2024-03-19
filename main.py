@@ -2,8 +2,9 @@ import discord
 import asyncio
 from discord import Intents
 import ollama
+import random
 
-#llm = 'dolphin-mistral:latest'
+# llm = 'dolphin-mistral:latest'
 llm = 'gdisney/mistral-uncensored:latest'
 prompt = ''
 
@@ -24,7 +25,7 @@ async def on_message(message):
         return
 
     # Check if the bot was mentioned
-    if client.user.mentioned_in(message):
+    if client.user.mentioned_in(message) or random.random() < 0.2:  # 20% chance
         # Check if the message is sent in the specified channel
         if message.channel.name == 'general':
             # Generate response using Ollama
@@ -34,11 +35,8 @@ async def on_message(message):
                     'content': f"Don't put quotes around your replies. You are a funny Discord bot named Henchbot, join in the conversation and craft a funny reply to {message.author.display_name} who wrote: {message.clean_content}"
                 },
             ])
-            #print(message.author.display_name)
-            #print(reply['message']['content'])
             # Send the response to the same channel
             await message.channel.send(reply['message']['content'])
-
 
 # Read bot token from file
 with open("henchbot_token.txt", "r") as token_file:
